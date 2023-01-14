@@ -1,0 +1,10 @@
+.editorconfig
+
+*.sh
+*.module.js
+*.test.js
+
+!setup-jq.sh
+!setup-wget.sh
+!setup-python-minimal.sh
+!setup-nodejs-version.sh

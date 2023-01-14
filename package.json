@@ -1,0 +1,47 @@
+{
+	"name": "@volkovasystem/setup-mongodb-version",
+	"alias": "setup-mongodb-version",
+	"version": "0.0.14",
+	"description": "Setup mongodb Version",
+	"main": "setup-mongodb-version.js",
+	"scripts": {
+		"clean": "source ./tool/clean-module.sh",
+		"check": "source ./tool/check-module.sh",
+		"test": "node ./setup-mongodb-version.test.js",
+		"stage": "source ./tool/stage-module.sh",
+		"prepublishOnly": "npm run stage",
+		"postpublish": "npm run clean && npm run check",
+		"setup-mongodb-version": "source ./setup-mongodb-version.sh",
+		"snjsv": "source ./setup-mongodb-version.sh"
+	},
+	"bin": {
+		"setup-jq": "setup-jq.sh",
+		"setup-wget": "setup-wget.sh",
+		"setup-mongodb-database-tool-version": "setup-mongodb-database-tool-version.sh",
+		"setup-mongodb-version": "setup-mongodb-version.sh",
+		"snjsv": "setup-mongodb-version.sh"
+	},
+	"os": [
+		"linux",
+		"!darwin",
+		"!win32"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/volkovasystem/setup-mongodb-version.git"
+	},
+	"keywords": [
+		"setup",
+		"mongodb",
+		"version"
+	],
+	"author": "Richeve S. Bebedor <richeve.bebedor@gmail.com>",
+	"contributors": [
+		"Richeve S. Bebedor <richeve.bebedor@gmail.com>"
+	],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/volkovasystem/setup-mongodb-version/issues"
+	},
+	"homepage": "https://github.com/volkovasystem/setup-mongodb-version#readme"
+}

@@ -13,7 +13,7 @@ PARAMETER="$(\
 getopt \
 --quiet \
 --alternative \
---options v:n: \
+--options t: \
 --longoptions version:,npm: \
 -- "$@"\
 )";
@@ -21,20 +21,15 @@ getopt \
 [[ $? > 0 ]] && \
 exit 1;
 
-TARGET_VERSION=;
-TARGET_NPM_VERSION=;
+TARGET_TOOL_VERSION=;
 
 eval set -- "$PARAMETER";
 
 while true;
 do
 	case "$1" in
-		-v | --version )
-			TARGET_VERSION=$2;
-			shift 2
-			;;
-		-n | --npm )
-			TARGET_NPM_VERSION=$2;
+		-t | --toolVersion )
+			TARGET_TOOL_VERSION=$2;
 			shift 2
 			;;
 		-- )
@@ -49,7 +44,7 @@ done
 
 set +vx; eval "$SHELL_STATE";
 
-#;	@section: setup mongodb version:
+#;	@section: setup mongodb tool version:
 
 #;	@section: install needed module;
 [[ ! -x /usr/bin/curl ]] && \
@@ -115,81 +110,75 @@ PLATFORM_ROOT_DIRECTORY_PATH=$HOME;
 PRDP=$PLATFORM_ROOT_DIRECTORY_PATH;
 
 #;	@note: set mongodb version path namespace;
-MONGODB_VERSION_PATH_NAMESPACE="mongodb-database-tool-version";
+MONGODB_VERSION_PATH_NAMESPACE="mongodb-version";
 MVPN=$MONGODB_VERSION_PATH_NAMESPACE;
 
-#;	@note: set mongodb version path;
-MONGODB_VERSION_PATH="$PRDP/$MVPN";
-MVP=$MONGODB_VERSION_PATH;
+#;	@note: set mongodb tool version path;
+MONGODB_TOOL_VERSION_PATH="$PRDP/$MVPN";
+MTVP=$MONGODB_TOOL_VERSION_PATH;
 
-#;	@note: set mongodb version;
-CURRENT_MONGODB_LTS_VERSION="$(								\
-wget -qO- https://mongodb.org/download/release/index.json | 	\
-jq '.[] | select(.lts!=false) | .version' | 				\
+#;	@note: set mongodb tool version;
+CURRENT_MONGODB_TOOL_VERSION="$(							\
+wget -qO- $REPOSITORY_URI_PATH/tool-version-list.json | 	\
+jq '.[] | select(.stable!=false) | .version' | 				\
 grep -Eo '[0-9]+.[0-9]+.[0-9]+'|							\
 head -n 1)";
-MONGODB_VERSION="$TARGET_VERSION";
-[[ -z "$MONGODB_VERSION" ]] && \
-MONGODB_VERSION=$CURRENT_MONGODB_LTS_VERSION;
-MV=$MONGODB_VERSION;
+MONGODB_TOOL_VERSION="$TARGET_TOOL_VERSION";
+[[ -z "$MONGODB_TOOL_VERSION" ]] && \
+MONGODB_TOOL_VERSION=$CURRENT_MONGODB_TOOL_VERSION;
+MTV=$MONGODB_TOOL_VERSION;
 
-#;	@note: set mongodb package namespace;
-MONGODB_PACKAGE_NAMESPACE="node-v$MV-linux-x64";
-MPN=$MONGODB_PACKAGE_NAMESPACE;
+#;	@note: set mongodb tool package namespace;
+MONGODB_TOOL_PACKAGE_NAMESPACE="mongodb-database-tools-ubuntu2004-x86_64-$MTV";
+MTPN=$MONGODB_TOOL_PACKAGE_NAMESPACE;
 
-#;	@note: set mongodb download URL path;
-MONGODB_DOWNLOAD_URL_PATH="https://mongodb.org/dist/v$MV/$MPN.tar.gz";
-MDUP=$MONGODB_DOWNLOAD_URL_PATH;
+#;	@note: set mongodb tool download URL path;
+MONGODB_TOOL_DOWNLOAD_URL_PATH="https://fastdl.mongodb.org/tools/db/$MTPN.tar.gz";
+MTDUP=$MONGODB_TOOL_DOWNLOAD_URL_PATH;
 
-#;	@note: set mongodb package file path;
-MONGODB_PACKAGE_FILE_PATH="$MVP/$MPN.tar.gz";
-MPFP=$MONGODB_PACKAGE_FILE_PATH;
+#;	@note: set mongodb tool package file path;
+MONGODB_TOOL_PACKAGE_FILE_PATH="$MTVP/$MTPN.tar.gz";
+MTPFP=$MONGODB_TOOL_PACKAGE_FILE_PATH;
 
-#;	@note: set mongodb package directory path;
-MONGODB_PACKAGE_DIRECTORY_PATH="$MVP/$MPN";
-MPDP=$MONGODB_PACKAGE_DIRECTORY_PATH;
+#;	@note: set mongodb tool package directory path;
+MONGODB_TOOL_PACKAGE_DIRECTORY_PATH="$MTVP/$MTPN";
+MTPDP=$MONGODB_TOOL_PACKAGE_DIRECTORY_PATH;
 
-#;	@note: initialize mongodb version directory;
-[[ ! -d $MVP ]] && \
-mkdir $MVP;
+#;	@note: initialize mongodb tool version directory;
+[[ ! -d $MTVP ]] && \
+mkdir $MTVP;
 
-#;	@note: download mongodb package;
-[[ ! -f $MPFP ]] && \
-wget $MDUP -P $MVP;
+#;	@note: download mongodb tool package;
+[[ ! -f $MTPFP ]] && \
+wget $MTDUP -P $MTVP;
 
-#;	@note: extract mongodb package;
-[[ ! -d $MPDP ]] && \
-tar -xzvf $MPFP -C $MVP;
+#;	@note: extract mongodb tool package;
+[[ ! -d $MTPDP ]] && \
+tar -xzvf $MTPFP -C $MTVP;
 
-#;	@note: set mongodb path;
-MONGODB_PATH="$(			\
-ls -d $MVP/$(ls $MVP |	\
-grep $MV |				\
-grep -v "\.tar\.gz$"	\
+#;	@note: set mongodb tool path;
+MONGODB_TOOL_PATH="$(		\
+ls -d $MTVP/$(ls $MTVP |	\
+grep $MTV |					\
+grep -v "\.tar\.gz$"		\
 ) 2>/dev/null)/bin";
-MP=$MONGODB_PATH;
+MTP=$MONGODB_TOOL_PATH;
 
-#;	@note: clean mongodb binary path;
-[[ $(echo $PATH | grep -oP $MVPN | head -1) == $MVPN ]] && \
-export PATH="$(			\
-echo $PATH |			\
-tr ":" "\n" |			\
-grep -v $MVPN |			\
-tr "\n" ":" |			\
-sed "s/:\{2,\}/:/g" |	\
+#;	@note: clean mongodb tool binary path;
+[[ $(echo $PATH | grep -oP $MTVPN | head -1) == $MTVPN ]] && \
+export PATH="$(				\
+echo $PATH |				\
+tr ":" "\n" |				\
+grep -v $MTVPN |			\
+tr "\n" ":" |				\
+sed "s/:\{2,\}/:/g" |		\
 sed "s/:$//")";
 
-#;	@note: export mongodb binary path;
-[[ $(echo $PATH | grep -oP $MP ) != $MP ]] && \
-export PATH="$PATH:$MP";
+#;	@note: export mongodb tool binary path;
+[[ $(echo $PATH | grep -oP $MTP ) != $MTP ]] && \
+export PATH="$PATH:$MTP";
 
-echo "mongod@$(node --version)";
-echo "mongo@$(npm --version)";
-
-[[ ! -x $(which setup-mongodb-version) ]] && \
-npm install @volkovasystem/setup-mongodb-version --yes --global;
-
-#;	@section: setup mongodb version;
+#;	@section: setup mongodb tool version;
 
 set -o history;
 

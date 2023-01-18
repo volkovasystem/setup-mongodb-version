@@ -13,7 +13,7 @@ PARAMETER="$(\
 getopt \
 --quiet \
 --alternative \
---options v:n: \
+--options v:a:p: \
 --longoptions version:,npm: \
 -- "$@"\
 )";
@@ -22,7 +22,8 @@ getopt \
 exit 1;
 
 TARGET_VERSION=;
-TARGET_NPM_VERSION=;
+TARGET_ARCHITECTURE_VERSION=;
+TARGET_PLATFORM_VERSION=;
 
 eval set -- "$PARAMETER";
 
@@ -33,8 +34,12 @@ do
 			TARGET_VERSION=$2;
 			shift 2
 			;;
-		-n | --npm )
-			TARGET_NPM_VERSION=$2;
+		-a | --architectureVersion )
+			TARGET_ARCHITECTURE_VERSION=$2;
+			shift 2
+			;;
+		-p | --platformVersion )
+			TARGET_PLATFORM_VERSION=$2;
 			shift 2
 			;;
 		-- )
@@ -123,26 +128,32 @@ MONGODB_VERSION_PATH="$PRDP/$MVPN";
 MVP=$MONGODB_VERSION_PATH;
 
 #;	@note: set mongodb version;
-CURRENT_MONGODB_LTS_VERSION="$(								\
-wget -qO- https://mongodb.org/download/release/index.json | 	\
-jq '.[] | select(.lts!=false) | .version' | 				\
-grep -Eo '[0-9]+.[0-9]+.[0-9]+'|							\
+CURRENT_MONGODB_STABLE_VERSION="$(					\
+wget -qO- $REPOSITORY_URI_PATH/version-list.json |	\
+jq '.[] | select(.stable!=false) | .version' | 		\
+grep -Eo '[0-9]+.[0-9]+.[0-9]+'|					\
 head -n 1)";
 MONGODB_VERSION="$TARGET_VERSION";
 [[ -z "$MONGODB_VERSION" ]] && \
-MONGODB_VERSION=$CURRENT_MONGODB_LTS_VERSION;
+MONGODB_VERSION=$CURRENT_MONGODB_STABLE_VERSION;
 MV=$MONGODB_VERSION;
 
+MONGODB_ARCHITECTURE_VERSION="x86_64";
+MAV=$MONGODB_ARCHITECTURE_VERSION;
+
+MONGODB_PLATFORM_VERSION="ubuntu2004";
+MPV=$MONGODB_PLATFORM_VERSION;
+
 #;	@note: set mongodb package namespace;
-MONGODB_PACKAGE_NAMESPACE="node-v$MV-linux-x64";
+MONGODB_PACKAGE_NAMESPACE="mongodb-linux-$MAV-$MPV-$MV";
 MPN=$MONGODB_PACKAGE_NAMESPACE;
 
 #;	@note: set mongodb download URL path;
-MONGODB_DOWNLOAD_URL_PATH="https://mongodb.org/dist/v$MV/$MPN.tar.gz";
-NDUP=$MONGODB_DOWNLOAD_URL_PATH;
+MONGODB_DOWNLOAD_URL_PATH="https://fastdl.mongodb.org/linux/$MPN.tgz";
+MDUP=$MONGODB_DOWNLOAD_URL_PATH;
 
 #;	@note: set mongodb package file path;
-MONGODB_PACKAGE_FILE_PATH="$MVP/$MPN.tar.gz";
+MONGODB_PACKAGE_FILE_PATH="$MVP/$MPN.tgz";
 MPFP=$MONGODB_PACKAGE_FILE_PATH;
 
 #;	@note: set mongodb package directory path;
@@ -155,7 +166,7 @@ mkdir $MVP;
 
 #;	@note: download mongodb package;
 [[ ! -f $MPFP ]] && \
-wget $NDUP -P $MVP;
+wget $MDUP -P $MVP;
 
 #;	@note: extract mongodb package;
 [[ ! -d $MPDP ]] && \

@@ -17,7 +17,7 @@
 	"bin": {
 		"setup-jq": "setup-jq.sh",
 		"setup-wget": "setup-wget.sh",
-		"setup-mongodb-database-tool-version": "setup-mongodb-database-tool-version.sh",
+		"setup-mongodb-tool-version": "setup-mongodb-tool-version.sh",
 		"setup-mongodb-version": "setup-mongodb-version.sh",
 		"snjsv": "setup-mongodb-version.sh"
 	},

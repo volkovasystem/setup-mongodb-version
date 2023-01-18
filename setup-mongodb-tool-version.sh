@@ -13,7 +13,7 @@ PARAMETER="$(\
 getopt \
 --quiet \
 --alternative \
---options t: \
+--options t:a:p: \
 --longoptions version:,npm: \
 -- "$@"\
 )";
@@ -22,6 +22,8 @@ getopt \
 exit 1;
 
 TARGET_TOOL_VERSION=;
+TARGET_TOOL_ARCHITECTURE_VERSION=;
+TARGET_TOOL_PLATFORM_VERSION=;
 
 eval set -- "$PARAMETER";
 
@@ -30,6 +32,14 @@ do
 	case "$1" in
 		-t | --toolVersion )
 			TARGET_TOOL_VERSION=$2;
+			shift 2
+			;;
+		-a | --architectureVersion )
+			TARGET_TOOL_ARCHITECTURE_VERSION=$2;
+			shift 2
+			;;
+		-p | --platformVersion )
+			TARGET_TOOL_PLATFORM_VERSION=$2;
 			shift 2
 			;;
 		-- )
@@ -118,18 +128,28 @@ MONGODB_TOOL_VERSION_PATH="$PRDP/$MVPN";
 MTVP=$MONGODB_TOOL_VERSION_PATH;
 
 #;	@note: set mongodb tool version;
-CURRENT_MONGODB_TOOL_VERSION="$(							\
-wget -qO- $REPOSITORY_URI_PATH/tool-version-list.json | 	\
-jq '.[] | select(.stable!=false) | .version' | 				\
-grep -Eo '[0-9]+.[0-9]+.[0-9]+'|							\
+CURRENT_MONGODB_TOOL_VERSION="$(									\
+wget -qO- $REPOSITORY_URI_PATH/mongodb-tool-version-list.json | 	\
+jq '.[] | select(.stable!=false) | .version' | 						\
+grep -Eo '[0-9]+.[0-9]+.[0-9]+'|									\
 head -n 1)";
 MONGODB_TOOL_VERSION="$TARGET_TOOL_VERSION";
 [[ -z "$MONGODB_TOOL_VERSION" ]] && \
 MONGODB_TOOL_VERSION=$CURRENT_MONGODB_TOOL_VERSION;
 MTV=$MONGODB_TOOL_VERSION;
 
+MONGODB_TOOL_ARCHITECTURE_VERSION="$TARGET_TOOL_ARCHITECTURE_VERSION";
+[[ -z "$MONGODB_TOOL_ARCHITECTURE_VERSION" ]] && \
+MONGODB_TOOL_ARCHITECTURE_VERSION="x86_64";
+MTAV=$MONGODB_TOOL_ARCHITECTURE_VERSION;
+
+MONGODB_TOOL_PLATFORM_VERSION="$TARGET_TOOL_PLATFORM_VERSION";
+[[ -z "$MONGODB_TOOL_PLATFORM_VERSION" ]] && \
+MONGODB_TOOL_PLATFORM_VERSION="ubuntu2004";
+MTPV=$MONGODB_TOOL_PLATFORM_VERSION;
+
 #;	@note: set mongodb tool package namespace;
-MONGODB_TOOL_PACKAGE_NAMESPACE="mongodb-database-tools-ubuntu2004-x86_64-$MTV";
+MONGODB_TOOL_PACKAGE_NAMESPACE="mongodb-database-tools-$MTPV-$MTAV-$MTV";
 MTPN=$MONGODB_TOOL_PACKAGE_NAMESPACE;
 
 #;	@note: set mongodb tool download URL path;
@@ -177,6 +197,9 @@ sed "s/:$//")";
 #;	@note: export mongodb tool binary path;
 [[ $(echo $PATH | grep -oP $MTP ) != $MTP ]] && \
 export PATH="$PATH:$MTP";
+
+echo "mongodump@$(mongodump --version)";
+echo "mongorestore@$(mongorestore --version)";
 
 #;	@section: setup mongodb tool version;
 

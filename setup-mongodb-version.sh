@@ -22,6 +22,7 @@ getopt \
 exit 1;
 
 TARGET_VERSION=;
+TARGET_TOOL_VERSION=;
 TARGET_ARCHITECTURE_VERSION=;
 TARGET_PLATFORM_VERSION=;
 
@@ -32,6 +33,10 @@ do
 	case "$1" in
 		-v | --version )
 			TARGET_VERSION=$2;
+			shift 2
+			;;
+		-t | --toolVersion )
+			TARGET_TOOL_VERSION=$2;
 			shift 2
 			;;
 		-a | --architectureVersion )
@@ -128,19 +133,23 @@ MONGODB_VERSION_PATH="$PRDP/$MVPN";
 MVP=$MONGODB_VERSION_PATH;
 
 #;	@note: set mongodb version;
-CURRENT_MONGODB_STABLE_VERSION="$(					\
-wget -qO- $REPOSITORY_URI_PATH/version-list.json |	\
-jq '.[] | select(.stable!=false) | .version' | 		\
-grep -Eo '[0-9]+.[0-9]+.[0-9]+'|					\
+CURRENT_MONGODB_STABLE_VERSION="$(							\
+wget -qO- $REPOSITORY_URI_PATH/mongodb-version-list.json |	\
+jq '.[] | select(.stable!=false) | .version' | 				\
+grep -Eo '[0-9]+.[0-9]+.[0-9]+'|							\
 head -n 1)";
 MONGODB_VERSION="$TARGET_VERSION";
 [[ -z "$MONGODB_VERSION" ]] && \
 MONGODB_VERSION=$CURRENT_MONGODB_STABLE_VERSION;
 MV=$MONGODB_VERSION;
 
+MONGODB_ARCHITECTURE_VERSION="$TARGET_ARCHITECTURE_VERSION";
+[[ -z "$MONGODB_ARCHITECTURE_VERSION" ]] && \
 MONGODB_ARCHITECTURE_VERSION="x86_64";
 MAV=$MONGODB_ARCHITECTURE_VERSION;
 
+MONGODB_PLATFORM_VERSION="$TARGET_PLATFORM_VERSION";
+[[ -z "$MONGODB_PLATFORM_VERSION" ]] && \
 MONGODB_PLATFORM_VERSION="ubuntu2004";
 MPV=$MONGODB_PLATFORM_VERSION;
 
@@ -174,9 +183,9 @@ tar -xzvf $MPFP -C $MVP;
 
 #;	@note: set mongodb path;
 MONGODB_PATH="$(			\
-ls -d $MVP/$(ls $MVP |	\
-grep $MV |				\
-grep -v "\.tar\.gz$"	\
+ls -d $MVP/$(ls $MVP |		\
+grep $MV |					\
+grep -v "\.tar\.gz$"		\
 ) 2>/dev/null)/bin";
 MP=$MONGODB_PATH;
 
@@ -194,8 +203,40 @@ sed "s/:$//")";
 [[ $(echo $PATH | grep -oP $MP ) != $MP ]] && \
 export PATH="$PATH:$MP";
 
-echo "mongod@$(node --version)";
-echo "mongo@$(npm --version)";
+echo "mongod@$(mongod --version)";
+echo "mongo@$(mongo --version)";
+
+if  	[[													\
+				-f "setup-mongodb-tool-version.sh"			\
+			&&												\
+				! -x $(which mongodump)						\
+		]]
+	then
+		source setup-mongodb-tool-version.sh				\
+		-t $TARGET_TOOL_VERSION								\
+		-a $TARGET_ARCHITECTURE_VERSION						\
+		-p $TARGET_PLATFORM_VERSION;
+elif 	[[													\
+				! -f "setup-mongodb-tool-version.sh"		\
+			&&												\
+				-x $(which setup-mongodb-tool-version)		\
+			&&												\
+				! -x $(which mongodump)						\
+		]]
+	then
+		source setup-mongodb-tool-version					\
+		-t $TARGET_TOOL_VERSION								\
+		-a $TARGET_ARCHITECTURE_VERSION						\
+		-p $TARGET_PLATFORM_VERSION;
+elif [[ ! -x $(which mongodump) ]]
+	then
+		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-mongodb-tool-version.sh") \
+		-t $TARGET_TOOL_VERSION								\
+		-a $TARGET_ARCHITECTURE_VERSION						\
+		-p $TARGET_PLATFORM_VERSION;;
+else
+		wget --version;
+fi
 
 [[ ! -x $(which setup-mongodb-version) ]] && \
 npm install @volkovasystem/setup-mongodb-version --yes --global;

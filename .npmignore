@@ -6,5 +6,5 @@
 
 !setup-jq.sh
 !setup-wget.sh
-!setup-python-minimal.sh
-!setup-nodejs-version.sh
+!setup-mongodb-version.sh
+!setup-mongodb-tool-version.sh

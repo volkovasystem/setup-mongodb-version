@@ -85,7 +85,7 @@ elif 	[[ 								\
 		]]
 	then
 		source setup-jq;
-elif [[ ! -x $(which jq) ]]
+elif	[[ ! -x $(which jq) ]]
 	then
 		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-jq.sh");
 else
@@ -108,7 +108,7 @@ elif 	[[								\
 		]]
 	then
 		source setup-wget;
-elif [[ ! -x $(which wget) ]]
+elif	[[ ! -x $(which wget) ]]
 	then
 		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-wget.sh");
 else
@@ -233,7 +233,7 @@ elif 	[[													\
 		-t $TARGET_TOOL_VERSION								\
 		-a $TARGET_ARCHITECTURE_VERSION						\
 		-p $TARGET_PLATFORM_VERSION;
-elif [[ ! -x $(which mongodump) ]]
+elif	[[ ! -x $(which mongodump) ]]
 	then
 		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-mongodb-tool-version.sh") \
 		-t $TARGET_TOOL_VERSION								\

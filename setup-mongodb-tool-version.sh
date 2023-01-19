@@ -80,7 +80,7 @@ elif 	[[ 								\
 		]]
 	then
 		source setup-jq;
-elif [[ ! -x $(which jq) ]]
+elif	[[ ! -x $(which jq) ]]
 	then
 		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-jq.sh");
 else
@@ -103,7 +103,7 @@ elif 	[[								\
 		]]
 	then
 		source setup-wget;
-elif [[ ! -x $(which wget) ]]
+elif	[[ ! -x $(which wget) ]]
 	then
 		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-wget.sh");
 else
@@ -153,11 +153,11 @@ MONGODB_TOOL_PACKAGE_NAMESPACE="mongodb-database-tools-$MTPV-$MTAV-$MTV";
 MTPN=$MONGODB_TOOL_PACKAGE_NAMESPACE;
 
 #;	@note: set mongodb tool download URL path;
-MONGODB_TOOL_DOWNLOAD_URL_PATH="https://fastdl.mongodb.org/tools/db/$MTPN.tar.gz";
+MONGODB_TOOL_DOWNLOAD_URL_PATH="https://fastdl.mongodb.org/tools/db/$MTPN.tgz";
 MTDUP=$MONGODB_TOOL_DOWNLOAD_URL_PATH;
 
 #;	@note: set mongodb tool package file path;
-MONGODB_TOOL_PACKAGE_FILE_PATH="$MTVP/$MTPN.tar.gz";
+MONGODB_TOOL_PACKAGE_FILE_PATH="$MTVP/$MTPN.tgz";
 MTPFP=$MONGODB_TOOL_PACKAGE_FILE_PATH;
 
 #;	@note: set mongodb tool package directory path;

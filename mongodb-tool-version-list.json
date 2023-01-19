@@ -1,6 +1,9 @@
 [
 	{
+		"architectureVersion": "x86_64",
+		"platformVersion": "ubuntu2004",
 		"version": "100.6.1",
-		"stable": true
+		"stable": true,
+		"extension": "tgz"
 	}
 ]

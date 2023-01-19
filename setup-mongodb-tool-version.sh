@@ -18,10 +18,8 @@ getopt \
 -- "$@"\
 )";
 
-echo "$?";
-
-#[[ $? > 0 ]] && \
-#exit 1;
+[[ $? > 0 ]] && \
+exit 1;
 
 TARGET_TOOL_VERSION=;
 TARGET_TOOL_ARCHITECTURE_VERSION=;

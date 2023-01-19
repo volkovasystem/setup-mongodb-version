@@ -205,4 +205,5 @@ echo "mongorestore@$(mongorestore --version)";
 
 set -o history;
 
+echo $(ps -o stat= -p $PPID);
 exec $SHELL -i;

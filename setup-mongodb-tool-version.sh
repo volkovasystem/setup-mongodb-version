@@ -205,5 +205,5 @@ echo "mongorestore@$(mongorestore --version)";
 
 set -o history;
 
-echo $(ps -o stat= -p $PPID);
+[[ ! $SHLVL -gt 2 ]] && \
 exec $SHELL -i;

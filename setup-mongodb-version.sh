@@ -255,8 +255,6 @@ else
 		echo "mongorestore@$(mongorestore --version)";
 fi
 
-echo "go here";
-
 [[ ! -x $(which setup-mongodb-version) ]] && \
 npm install @volkovasystem/setup-mongodb-version --yes --force --global;
 

@@ -66,14 +66,14 @@ curl --version;
 
 REPOSITORY_URI_PATH="https://raw.githubusercontent.com/volkovasystem/setup-mongodb-version/main";
 
-if 		[[ 								\
+if		[[ 								\
 				-f "setup-jq.sh"		\
 			&&							\
 				! -x $(which jq) 		\
 		]]
 	then
 		source setup-jq.sh;
-elif 	[[ 								\
+elif	[[ 								\
 				! -f "setup-jq.sh"		\
 			&&							\
 				-x $(which setup-jq)	\
@@ -89,14 +89,14 @@ else
 		jq --version;
 fi
 
-if  	[[								\
+if		[[								\
 				-f "setup-wget.sh"		\
 			&&							\
 				! -x $(which wget)		\
 		]]
 	then
 		source setup-wget.sh;
-elif 	[[								\
+elif	[[								\
 				! -f "setup-wget.sh"	\
 			&&							\
 				-x $(which setup-wget)	\

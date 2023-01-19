@@ -69,14 +69,14 @@ curl --version;
 
 REPOSITORY_URI_PATH="https://raw.githubusercontent.com/volkovasystem/setup-mongodb-version/main";
 
-if 		[[ 								\
+if		[[ 								\
 				-f "setup-jq.sh"		\
 			&&							\
 				! -x $(which jq) 		\
 		]]
 	then
 		source setup-jq.sh;
-elif 	[[ 								\
+elif	[[ 								\
 				! -f "setup-jq.sh"		\
 			&&							\
 				-x $(which setup-jq)	\
@@ -92,14 +92,14 @@ else
 		jq --version;
 fi
 
-if  	[[								\
+if		[[								\
 				-f "setup-wget.sh"		\
 			&&							\
 				! -x $(which wget)		\
 		]]
 	then
 		source setup-wget.sh;
-elif 	[[								\
+elif	[[								\
 				! -f "setup-wget.sh"	\
 			&&							\
 				-x $(which setup-wget)	\
@@ -222,7 +222,7 @@ echo "mongo@$(mongo --version)";
 [[ -x $(which mongos) ]] && \
 echo "mongos@$(mongos --version)";
 
-if  	[[													\
+if		[[													\
 				-f "setup-mongodb-tool-version.sh"			\
 			&&												\
 				! -x $(which mongodump)						\
@@ -232,7 +232,7 @@ if  	[[													\
 		-t $MTV												\
 		-a $TARGET_ARCHITECTURE_VERSION						\
 		-p $TARGET_PLATFORM_VERSION;
-elif 	[[													\
+elif	[[													\
 				! -f "setup-mongodb-tool-version.sh"		\
 			&&												\
 				-x $(which setup-mongodb-tool-version)		\
@@ -242,14 +242,14 @@ elif 	[[													\
 	then
 		source setup-mongodb-tool-version					\
 		-t $MTV												\
-		-a $TARGET_ARCHITECTURE_VERSION						\
-		-p $TARGET_PLATFORM_VERSION;
+		-a $MAV												\
+		-p $MPV;
 elif	[[ ! -x $(which mongodump) ]]
 	then
 		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-mongodb-tool-version.sh") \
 		-t $MTV												\
-		-a $TARGET_ARCHITECTURE_VERSION						\
-		-p $TARGET_PLATFORM_VERSION;
+		-a $MAV												\
+		-p $MPV;
 else
 		wget --version;
 fi

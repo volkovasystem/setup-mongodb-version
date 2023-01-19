@@ -185,11 +185,11 @@ grep -v "\.tgz$"			\
 MTP=$MONGODB_TOOL_PATH;
 
 #;	@note: clean mongodb tool binary path;
-[[ $(echo $PATH | grep -oP $MTVPN | head -1) == $MTVPN ]] && \
+[[ $(echo $PATH | grep -oP $MVPN | head -1) == $MVPN ]] && \
 export PATH="$(				\
 echo $PATH |				\
 tr ":" "\n" |				\
-grep -v $MTVPN |			\
+grep -v $MVPN |				\
 tr "\n" ":" |				\
 sed "s/:\{2,\}/:/g" |		\
 sed "s/:$//")";

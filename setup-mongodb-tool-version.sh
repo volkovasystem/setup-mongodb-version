@@ -205,7 +205,5 @@ echo "mongorestore@$(mongorestore --version)";
 
 set -o history;
 
-echo $SHLVL;
-
-#[[ $SHLVL -gt 2 ]] && \
-#exec $SHELL -i;
+[[ $SHLVL -lt 2 ]] && \
+exec $SHELL -i;

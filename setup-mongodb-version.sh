@@ -258,7 +258,7 @@ fi
 echo "go here";
 
 [[ ! -x $(which setup-mongodb-version) ]] && \
-npm install @volkovasystem/setup-mongodb-version --yes --global;
+npm install @volkovasystem/setup-mongodb-version --yes --force --global;
 
 #;	@section: setup mongodb version;
 

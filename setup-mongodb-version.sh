@@ -251,8 +251,11 @@ elif	[[ ! -x $(which mongodump) ]]
 		-a $MAV												\
 		-p $MPV;
 else
-		wget --version;
+		echo "mongodump@$(mongodump --version)";
+		echo "mongorestore@$(mongorestore --version)";
 fi
+
+echo "go here";
 
 [[ ! -x $(which setup-mongodb-version) ]] && \
 npm install @volkovasystem/setup-mongodb-version --yes --global;

@@ -4,6 +4,9 @@
 *.module.js
 *.test.js
 
+!mongodb-version-list.json
+!mongodb-tool-version-list.json
+
 !setup-jq.sh
 !setup-wget.sh
 !setup-mongodb-version.sh

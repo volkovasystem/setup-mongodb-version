@@ -13,7 +13,7 @@ PARAMETER="$(\
 getopt \
 --quiet \
 --alternative \
---options v:a:p: \
+--options v:t:a:p: \
 --longoptions version:,npm: \
 -- "$@"\
 )";

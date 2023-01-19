@@ -204,7 +204,12 @@ sed "s/:$//")";
 export PATH="$PATH:$MP";
 
 echo "mongod@$(mongod --version)";
+
+[[ -x $(which mongo) ]] && \
 echo "mongo@$(mongo --version)";
+
+[[ -x $(which mongos) ]] && \
+echo "mongos@$(mongos --version)";
 
 if  	[[													\
 				-f "setup-mongodb-tool-version.sh"			\
@@ -233,7 +238,7 @@ elif [[ ! -x $(which mongodump) ]]
 		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-mongodb-tool-version.sh") \
 		-t $TARGET_TOOL_VERSION								\
 		-a $TARGET_ARCHITECTURE_VERSION						\
-		-p $TARGET_PLATFORM_VERSION;;
+		-p $TARGET_PLATFORM_VERSION;
 else
 		wget --version;
 fi

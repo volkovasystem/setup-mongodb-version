@@ -143,6 +143,17 @@ MONGODB_VERSION="$TARGET_VERSION";
 MONGODB_VERSION=$CURRENT_MONGODB_STABLE_VERSION;
 MV=$MONGODB_VERSION;
 
+#;	@note: set mongodb tool version;
+CURRENT_MONGODB_TOOL_VERSION="$(									\
+wget -qO- $REPOSITORY_URI_PATH/mongodb-tool-version-list.json | 	\
+jq '.[] | select(.stable!=false) | .version' | 						\
+grep -Eo '[0-9]+.[0-9]+.[0-9]+'|									\
+head -n 1)";
+MONGODB_TOOL_VERSION="$TARGET_TOOL_VERSION";
+[[ -z "$MONGODB_TOOL_VERSION" ]] && \
+MONGODB_TOOL_VERSION=$CURRENT_MONGODB_TOOL_VERSION;
+MTV=$MONGODB_TOOL_VERSION;
+
 MONGODB_ARCHITECTURE_VERSION="$TARGET_ARCHITECTURE_VERSION";
 [[ -z "$MONGODB_ARCHITECTURE_VERSION" ]] && \
 MONGODB_ARCHITECTURE_VERSION="x86_64";
@@ -218,7 +229,7 @@ if  	[[													\
 		]]
 	then
 		source setup-mongodb-tool-version.sh				\
-		-t $TARGET_TOOL_VERSION								\
+		-t $MTV												\
 		-a $TARGET_ARCHITECTURE_VERSION						\
 		-p $TARGET_PLATFORM_VERSION;
 elif 	[[													\
@@ -230,13 +241,13 @@ elif 	[[													\
 		]]
 	then
 		source setup-mongodb-tool-version					\
-		-t $TARGET_TOOL_VERSION								\
+		-t $MTV												\
 		-a $TARGET_ARCHITECTURE_VERSION						\
 		-p $TARGET_PLATFORM_VERSION;
 elif	[[ ! -x $(which mongodump) ]]
 	then
 		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-mongodb-tool-version.sh") \
-		-t $TARGET_TOOL_VERSION								\
+		-t $MTV												\
 		-a $TARGET_ARCHITECTURE_VERSION						\
 		-p $TARGET_PLATFORM_VERSION;
 else

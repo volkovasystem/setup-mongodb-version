@@ -180,7 +180,7 @@ tar -xzvf $MTPFP -C $MTVP;
 MONGODB_TOOL_PATH="$(		\
 ls -d $MTVP/$(ls $MTVP |	\
 grep $MTV |					\
-grep -v "\.tar\.gz$"		\
+grep -v "\.tgz$"			\
 ) 2>/dev/null)/bin";
 MTP=$MONGODB_TOOL_PATH;
 

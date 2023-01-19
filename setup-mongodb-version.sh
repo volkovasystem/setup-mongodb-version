@@ -185,7 +185,7 @@ tar -xzvf $MPFP -C $MVP;
 MONGODB_PATH="$(			\
 ls -d $MVP/$(ls $MVP |		\
 grep $MV |					\
-grep -v "\.tar\.gz$"		\
+grep -v "\.tgz$"			\
 ) 2>/dev/null)/bin";
 MP=$MONGODB_PATH;
 

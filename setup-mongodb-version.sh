@@ -164,6 +164,39 @@ MONGODB_PLATFORM_VERSION="$TARGET_PLATFORM_VERSION";
 MONGODB_PLATFORM_VERSION="ubuntu2004";
 MPV=$MONGODB_PLATFORM_VERSION;
 
+if		[[													\
+				-f "setup-mongodb-tool-version.sh"			\
+			&&												\
+				! -x $(which mongodump)						\
+		]]
+	then
+		source setup-mongodb-tool-version.sh				\
+		-t $MTV												\
+		-a $TARGET_ARCHITECTURE_VERSION						\
+		-p $TARGET_PLATFORM_VERSION;
+elif	[[													\
+				! -f "setup-mongodb-tool-version.sh"		\
+			&&												\
+				-x $(which setup-mongodb-tool-version)		\
+			&&												\
+				! -x $(which mongodump)						\
+		]]
+	then
+		source setup-mongodb-tool-version					\
+		-t $MTV												\
+		-a $MAV												\
+		-p $MPV;
+elif	[[ ! -x $(which mongodump) ]]
+	then
+		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-mongodb-tool-version.sh") \
+		-t $MTV												\
+		-a $MAV												\
+		-p $MPV;
+else
+		echo "mongodump@$(mongodump --version)";
+		echo "mongorestore@$(mongorestore --version)";
+fi
+
 #;	@note: set mongodb package namespace;
 MONGODB_PACKAGE_NAMESPACE="mongodb-linux-$MAV-$MPV-$MV";
 MPN=$MONGODB_PACKAGE_NAMESPACE;
@@ -213,39 +246,6 @@ sed "s/:$//")";
 #;	@note: export mongodb binary path;
 [[ $(echo $PATH | grep -oP $MP ) != $MP ]] && \
 export PATH="$PATH:$MP";
-
-if		[[													\
-				-f "setup-mongodb-tool-version.sh"			\
-			&&												\
-				! -x $(which mongodump)						\
-		]]
-	then
-		source setup-mongodb-tool-version.sh				\
-		-t $MTV												\
-		-a $TARGET_ARCHITECTURE_VERSION						\
-		-p $TARGET_PLATFORM_VERSION;
-elif	[[													\
-				! -f "setup-mongodb-tool-version.sh"		\
-			&&												\
-				-x $(which setup-mongodb-tool-version)		\
-			&&												\
-				! -x $(which mongodump)						\
-		]]
-	then
-		source setup-mongodb-tool-version					\
-		-t $MTV												\
-		-a $MAV												\
-		-p $MPV;
-elif	[[ ! -x $(which mongodump) ]]
-	then
-		source <(curl -sqL "$REPOSITORY_URI_PATH/setup-mongodb-tool-version.sh") \
-		-t $MTV												\
-		-a $MAV												\
-		-p $MPV;
-else
-		echo "mongodump@$(mongodump --version)";
-		echo "mongorestore@$(mongorestore --version)";
-fi
 
 echo "mongod@$(mongod --version)";
 

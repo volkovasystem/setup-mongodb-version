@@ -214,14 +214,6 @@ sed "s/:$//")";
 [[ $(echo $PATH | grep -oP $MP ) != $MP ]] && \
 export PATH="$PATH:$MP";
 
-echo "mongod@$(mongod --version)";
-
-[[ -x $(which mongo) ]] && \
-echo "mongo@$(mongo --version)";
-
-[[ -x $(which mongos) ]] && \
-echo "mongos@$(mongos --version)";
-
 if		[[													\
 				-f "setup-mongodb-tool-version.sh"			\
 			&&												\
@@ -254,6 +246,14 @@ else
 		echo "mongodump@$(mongodump --version)";
 		echo "mongorestore@$(mongorestore --version)";
 fi
+
+echo "mongod@$(mongod --version)";
+
+[[ -x $(which mongo) ]] && \
+echo "mongo@$(mongo --version)";
+
+[[ -x $(which mongos) ]] && \
+echo "mongos@$(mongos --version)";
 
 [[ ! -x $(which setup-mongodb-version) ]] && \
 npm install @volkovasystem/setup-mongodb-version --yes --force --global;

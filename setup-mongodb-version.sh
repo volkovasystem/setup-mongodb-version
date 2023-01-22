@@ -247,10 +247,6 @@ else
 		echo "mongorestore@$(mongorestore --version)";
 fi
 
-#;	@note: export mongodb binary path;
-[[ $(echo $PATH | grep -oP $MP ) != $MP ]] && \
-export PATH="$PATH:$MP";
-
 echo "mongod@$(mongod --version)";
 
 [[ -x $(which mongo) ]] && \

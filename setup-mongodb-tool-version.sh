@@ -194,6 +194,8 @@ tr "\n" ":" |				\
 sed "s/:\{2,\}/:/g" |		\
 sed "s/:$//")";
 
+echo $PATH;
+
 #;	@note: export mongodb tool binary path;
 [[ $(echo $PATH | grep -oP $MTP ) != $MTP ]] && \
 export PATH="$PATH:$MTP";

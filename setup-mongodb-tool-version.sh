@@ -204,6 +204,3 @@ echo "mongorestore@$(mongorestore --version)";
 #;	@section: setup mongodb tool version;
 
 set -o history;
-
-[[ $SHLVL -lt 2 ]] && \
-exec $SHELL -i;

@@ -261,5 +261,3 @@ npm install @volkovasystem/setup-mongodb-version --yes --force --global;
 #;	@section: setup mongodb version;
 
 set -o history;
-
-exec $SHELL -i;

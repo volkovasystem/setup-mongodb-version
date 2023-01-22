@@ -1,7 +1,7 @@
 {
 	"name": "@volkovasystem/setup-mongodb-version",
 	"alias": "setup-mongodb-version",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Setup mongodb Version",
 	"main": "setup-mongodb-version.js",
 	"scripts": {
